@@ -2,7 +2,7 @@
 import os, random
 import serial
 
-prev = 0;
+filtered = 1800;
 
 def getDistance(ser):
     global prev
@@ -11,17 +11,18 @@ def getDistance(ser):
     try:
 	val = int(line)
 	#print "int=" + str(val)
+	return val
 	if val > 1800:
-	    return 0
+	    val = 1800
 
-        dx = val - prev
-	prev = val
+        filtered  = filtered * 0.9 + val *0.1
+	#prev = val
 	#print "DX=" + str(dx)
-	return dx
+	return filtered
     except:
 	pass
 
-    return 0
+    return 1800
 
 
 def rndmp3 ():
@@ -32,14 +33,15 @@ def rndmp3 ():
 
 ser = serial.Serial('/dev/ttyACM0')
 #rndmp3 ()
-filtered = 0
+#filtered = 0
 while 1==1:
     dx = getDistance(ser)
 
-    filtered = filtered * 0.8 + dx * 0.2
-    print "dx=" + str(filtered)
+    #filtered = filtered * 0.9 + abs(dx) * 0.1
+    print "dx=" + str(dx)
 
-    if filtered > 20:
+    if dx <  800:
 	rndmp3()
+	filtered = 1800
 
 
