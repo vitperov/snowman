@@ -5,19 +5,22 @@ import serial
 filtered = 1800;
 
 def getDistance(ser):
-    global prev
-    line = ser.readline()
+    global filtered
+    line = ser.readline().rstrip()
     #print "str=" + line 
     try:
 	val = int(line)
 	#print "int=" + str(val)
-	return val
+
 	if val > 1800:
 	    val = 1800
 
-        filtered  = filtered * 0.9 + val *0.1
+	if val < 100:
+	    val = 1800
+
+        filtered  = filtered * 0.8 + val *0.2
 	#prev = val
-	#print "DX=" + str(dx)
+	print line + "->" +str(int(filtered))
 	return filtered
     except:
 	pass
@@ -37,11 +40,13 @@ ser = serial.Serial('/dev/ttyACM0')
 while 1==1:
     dx = getDistance(ser)
 
-    #filtered = filtered * 0.9 + abs(dx) * 0.1
-    print "dx=" + str(dx)
+    #filtered = filtered * 0.8 + abs(dx) * 0.2
+    #print "dx=" + str(dx)
 
-    if dx <  800:
+    if dx < 1100:
 	rndmp3()
+	#ser.reset_input_buffer()
+	ser.flushInput()
 	filtered = 1800
 
 
