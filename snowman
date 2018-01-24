@@ -1,9 +1,9 @@
 #! /bin/sh
 set -x #echo on
 
-DESC="Auto wifi service"
-NAME=nsweight
-RUNDIR=/home/debian/bin/snowMan/
+DESC="Snowman service"
+NAME=snowman
+RUNDIR=/home/pi/bin/snowman/
 #DAEMON=/usr/sbin/$NAME
 #DAEMON_ARGS=""
 #PIDFILE=$RUNDIR/wicd.pid
@@ -29,11 +29,11 @@ case "$1" in
     echo "Starting SnowMan..."
 
     cd $RUNDIR
-    ./runSnow.sh &
+    python playDistance.py &
     ;;
   stop)
     echo "Stopping SnowMan..."
-    sudo killall runSnow.sh
+    sudo killall playDistance.py
     ;;
   *)
     echo "Usage: /etc/init.d/snowman{start|stop}"
